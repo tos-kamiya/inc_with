@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import shlex
 import sys
 import pexpect
 
@@ -25,18 +26,24 @@ def main(argv):
         sys.exit(0)
 
     raw_write = sys.stdout.buffer.write
-    cmd0 = ' '.join(args)
+    cmd0 = ' '.join(shlex.quote(a) for a in args)
     paramstr = ''
     while True:
-        cmd = '%s %s' % (cmd0, paramstr)
-        child = pexpect.spawn('/bin/bash', ['-c', cmd])
-        child.expect(pexpect.EOF)
-        output = child.before.replace(b'\r\n', b'\n')
+        try:
+            params = shlex.split(paramstr)
+        except ValueError:  # perhaps "No closing quotation" error
+            output = None
+        else:
+            cmd = '%s %s' % (cmd0, paramstr)
+            child = pexpect.spawn('/bin/bash', ['-c', cmd])
+            child.expect(pexpect.EOF)
+            output = child.before.replace(b'\r\n', b'\n')
 
         raw_write(b"\033[2J\033[1;1f")  # clear screen
-        raw_write(output)
-        if not output.endswith(b'\n'):
-            raw_write(b'\n')
+        if output:
+            raw_write(output)
+            if not output.endswith(b'\n'):
+                raw_write(b'\n')
         raw_write(("# %s %s>" % (cmd0, paramstr)).encode('utf-8'))
         sys.stdout.flush()
 
