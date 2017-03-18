@@ -7,11 +7,17 @@ you can give parameters to the command line in an incremental way,
 that is, every time you type a character, the command line executed repeatedly.
 To quit the session, type `[ESC]`.
 
-Usage:
-  inc_with [-u] COMMAND
+Usage: inc_with COMMAND
 
-Option:
-  -u    Exec command with `unbuffer` to avoid losing ansi escape sequence.
+## Sample Usage
+
+An incremental search for [ripgrep](https://github.com/BurntSushi/ripgrep).
+
+```sh
+$ inc_with rg -m 200
+```
+
+Here, option `-m 200` specifies an upper limit of results (lines).
 
 ## License
 
