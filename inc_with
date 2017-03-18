@@ -25,6 +25,7 @@ def main(argv):
         print(__doc__)
         sys.exit(0)
 
+    raw_write = sys.stdout.buffer.write
     cmd0 = args
     paramstr = ''
     while True:
@@ -34,17 +35,20 @@ def main(argv):
             params = shlex.split(paramstr)
             qcmd = cmd0 + params
             # print("qcmd=%s" % repr(qcmd))
-
             hcmd = ["head", "-n", "%d" % terminal_lines]
+
             s1 = subprocess.Popen(qcmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output = subprocess.check_output(hcmd, stdin=s1.stdout)
         except ValueError:  # no closing quotation
             output = None
 
-        print("\033[2J\033[1;1f")  # clear screen
+        raw_write(b"\033[2J\033[1;1f")  # clear screen
         if output:
-            print(output.decode('utf-8'))
-        print("# %s %s>" % (' '.join(cmd0), paramstr), end='', flush=True)
+            raw_write(output)
+            if not output.endswith(b'\n'):
+                raw_write(b'\n')
+        raw_write(("# %s %s>" % (' '.join(cmd0), paramstr)).encode('utf-8'))
+        sys.stdout.flush()
 
         c = getch()
         if c == '\x1b':  # esc
