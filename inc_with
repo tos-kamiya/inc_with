@@ -30,7 +30,7 @@ def main(argv):
     while True:
         terminal_lines = os.get_terminal_size().lines
 
-        cmd = 'unbuffer %s %s | head -n %d' % (cmd0, paramstr, terminal_lines - 1)
+        cmd = '%s %s | head -n %d' % (cmd0, paramstr, terminal_lines - 1)
         child = pexpect.spawn('/bin/bash', ['-c', cmd])
         child.expect(pexpect.EOF)
         output = child.before.replace(b'\r\n', b'\n')
