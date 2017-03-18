@@ -93,6 +93,7 @@ def main(argv):
             s1 = subprocess.Popen(qcmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output = subprocess.check_output(hcmd, stdin=s1.stdout)
             
+            print("\033[2J\033[1;1f")  # clear screen
             print(output.decode('utf-8'))
             print("# %s %s>" % (' '.join(cmd0), paramstr), end='', flush=True)
         else:
