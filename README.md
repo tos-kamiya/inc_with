@@ -11,5 +11,3 @@ usage: inc_with COMMAND
 
 Public Domain. 
 
-Except for the copy&pasted code from http://code.activestate.com/help/faq/.
-It's license could be either MIT, BSD, Mozilla, Apache, GPL ... (see http://code.activestate.com/help/faq/).
