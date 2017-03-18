@@ -29,32 +29,22 @@ def main(argv):
     paramstr = ''
     while True:
         terminal_lines = os.get_terminal_size().lines
-        paramstr_error = False
 
         try:
             params = shlex.split(paramstr)
-        except ValueError:  # no closing quotation
-            paramstr_error = True
-
-        if not paramstr_error:
-            if paramstr:
-                qcmd = cmd0 + params
-            else:
-                qcmd = cmd0[:]
+            qcmd = cmd0 + params
             # print("qcmd=%s" % repr(qcmd))
-            while qcmd and qcmd[-1] == '':
-                qcmd = qcmd[:-1]
 
             hcmd = ["head", "-n", "%d" % terminal_lines]
             s1 = subprocess.Popen(qcmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output = subprocess.check_output(hcmd, stdin=s1.stdout)
-            
-            print("\033[2J\033[1;1f")  # clear screen
+        except ValueError:  # no closing quotation
+            output = None
+
+        print("\033[2J\033[1;1f")  # clear screen
+        if output:
             print(output.decode('utf-8'))
-            print("# %s %s>" % (' '.join(cmd0), paramstr), end='', flush=True)
-        else:
-            print("\033[2J\033[1;1f")  # clear screen
-            print("# %s %s>" % (' '.join(cmd0), paramstr), end='', flush=True)
+        print("# %s %s>" % (' '.join(cmd0), paramstr), end='', flush=True)
 
         c = getch()
         if c == '\x1b':  # esc
