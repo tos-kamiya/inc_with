@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 
 import os
-import shlex
 import sys
-import subprocess
+import pexpect
 
 from getch import getch
 
 
 __doc__ = """inc_with, run command with giving parameters incrementally.
 
-Make an interactive session of the given command line.
-In the session, you can give parameters to the command line in an incremental way,
+Make an interactive session of the given command line. In the session, 
+you can give parameters to the command line in an incremental way, 
 that is, every time you type a character, the command line executed repeatedly.
 To quit the session, type [ESC].
 
@@ -26,32 +25,26 @@ def main(argv):
         sys.exit(0)
 
     raw_write = sys.stdout.buffer.write
-    cmd0 = args
+    cmd0 = ' '.join(args)
     paramstr = ''
     while True:
         terminal_lines = os.get_terminal_size().lines
 
-        try:
-            params = shlex.split(paramstr)
-            qcmd = cmd0 + params
-            # print("qcmd=%s" % repr(qcmd))
-            hcmd = ["head", "-n", "%d" % terminal_lines]
-
-            s1 = subprocess.Popen(qcmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            output = subprocess.check_output(hcmd, stdin=s1.stdout)
-        except ValueError:  # no closing quotation
-            output = None
+        cmd = 'unbuffer %s %s | head -n %d' % (cmd0, paramstr, terminal_lines - 1)
+        child = pexpect.spawn('/bin/bash', ['-c', cmd])
+        child.expect(pexpect.EOF)
+        output = child.before.replace(b'\r\n', b'\n')
 
         raw_write(b"\033[2J\033[1;1f")  # clear screen
-        if output:
-            raw_write(output)
-            if not output.endswith(b'\n'):
-                raw_write(b'\n')
-        raw_write(("# %s %s>" % (' '.join(cmd0), paramstr)).encode('utf-8'))
+        raw_write(output)
+        if not output.endswith(b'\n'):
+            raw_write(b'\n')
+        raw_write(("# %s %s>" % (cmd0, paramstr)).encode('utf-8'))
         sys.stdout.flush()
 
         c = getch()
         if c == '\x1b':  # esc
+            raw_write('\n')
             break  # while True
         elif c == '\x7f':  # bs
             paramstr = paramstr[:-1]
