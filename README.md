@@ -1,11 +1,13 @@
 # inc_with
-run command with adding parameters incrementally.
 
-Run a command once as command-line arguments.
-Give parameters of the command interactively, incrementally in a session.
-To quit the session, type [ESC].
+Run command with giving parameters incrementally.
 
-usage: inc_with COMMAND
+Make an interactive session of the given command line.
+In the session, you can give parameters to the command line in an incremental way,
+that is, every time you type a character, the command line executed repeatedly.
+To quit the session, type `[ESC]`.
+
+Usage: inc_with COMMAND
 
 ## License
 
