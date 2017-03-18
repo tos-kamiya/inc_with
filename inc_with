@@ -9,8 +9,8 @@ from getch import getch
 
 __doc__ = """inc_with, run command with giving parameters incrementally.
 
-Make an interactive session of the given command line. In the session, 
-you can give parameters to the command line in an incremental way, 
+Make an interactive session of the given command line. In the session,
+you can give parameters to the command line in an incremental way,
 that is, every time you type a character, the command line executed repeatedly.
 To quit the session, type [ESC].
 
@@ -28,9 +28,7 @@ def main(argv):
     cmd0 = ' '.join(args)
     paramstr = ''
     while True:
-        terminal_lines = os.get_terminal_size().lines
-
-        cmd = '%s %s | head -n %d' % (cmd0, paramstr, terminal_lines - 1)
+        cmd = '%s %s' % (cmd0, paramstr)
         child = pexpect.spawn('/bin/bash', ['-c', cmd])
         child.expect(pexpect.EOF)
         output = child.before.replace(b'\r\n', b'\n')
@@ -55,4 +53,3 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv)
-
