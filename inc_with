@@ -44,7 +44,7 @@ def main(argv):
 
         c = getch()
         if c == '\x1b':  # esc
-            raw_write('\n')
+            raw_write(b'\n')
             break  # while True
         elif c == '\x7f':  # bs
             paramstr = paramstr[:-1]
