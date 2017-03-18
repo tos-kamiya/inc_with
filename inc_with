@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import subprocess
+
+import colorama
+
+
+# ---- copied from http://code.activestate.com/recipes/134892/. code fragment from here
+
+class _Getch:
+    """Gets a single character from standard input.  Does not echo to the
+screen."""
+    def __init__(self):
+        try:
+            self.impl = _GetchWindows()
+        except ImportError:
+            self.impl = _GetchUnix()
+
+    def __call__(self): return self.impl()
+
+
+class _GetchUnix:
+    def __init__(self):
+        import tty, sys
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+
+class _GetchWindows:
+    def __init__(self):
+        import msvcrt
+
+    def __call__(self):
+        import msvcrt
+        return msvcrt.getch()
+
+getch = _Getch()
+
+# ---- to here
+
+
+__doc__ = """inc_with, run command with adding parameters incrementally.
+
+Run a command once as command-line arguments.
+Give parameters of the command interactively, incrementally in a session.
+To quit the session, type [ESC].
+
+usage: inc_with COMMAND
+"""
+
+
+def main(argv):
+    args = argv[1:]
+    if not args or args[0] in ('-h', '--help'):
+        print(__doc__)
+        sys.exit(0)
+
+    colorama.init()
+
+    cmd0 = args
+    paramstr = ''
+    while True:
+        terminal_lines = os.get_terminal_size().lines
+
+        if paramstr:
+            qcmd = cmd0 + paramstr.split(' ')
+        else:
+            qcmd = cmd0[:]
+        hcmd = ["head", "-n", "%d" % terminal_lines]
+        s1 = subprocess.Popen(qcmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output = subprocess.check_output(hcmd, stdin=s1.stdout)
+        
+        print("\033[2J\033[1;1f")  # color screen
+        print(output.decode('utf-8'))
+        print("## " + ' '.join(qcmd))
+
+        c = getch()
+        if c == '\x1b':  # esc
+            break  # while True
+        elif c == '\x7f':  # bs
+            paramstr = paramstr[:-1]
+        else:
+            # print("key=%s" % repr(c))
+            paramstr = paramstr + c
+
+
+if __name__ == '__main__':
+    main(sys.argv)
+
