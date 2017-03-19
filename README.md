@@ -11,13 +11,13 @@ Usage: inc_with COMMAND
 
 ## Sample Usage
 
-An incremental search for [ripgrep](https://github.com/BurntSushi/ripgrep).
+Make [ripgrep](https://github.com/BurntSushi/ripgrep) an incremental text search tool.
 
 ```sh
 $ inc_with rg -m 200
 ```
 
-Here, option `-m 200` specifies an upper limit of results (lines).
+Here, rg's option `-m 200` specifies an upper limit of results (lines).
 
 ## License
 

@@ -18,6 +18,10 @@ To quit the session, type [ESC].
 Usage: inc_with COMMAND
 """
 
+CLEAR_SCREEN = b"\033[2J\033[1;1f"
+BOLD = b'\033[1m'
+NORMAL = b'\033[0m'
+
 
 def main(argv):
     args = argv[1:]
@@ -39,16 +43,16 @@ def main(argv):
             child.expect(pexpect.EOF)
             output = child.before.replace(b'\r\n', b'\n')
 
-        raw_write(b"\033[2J\033[1;1f")  # clear screen
+        raw_write(CLEAR_SCREEN)
         if output:
             raw_write(output)
             if not output.endswith(b'\n'):
                 raw_write(b'\n')
-        raw_write(("# %s %s>" % (cmd0, paramstr)).encode('utf-8'))
+        raw_write(BOLD + ("%s %s" % (cmd0, paramstr)).encode('utf-8') + NORMAL)
         sys.stdout.flush()
 
         c = getch()
-        if c == '\x1b':  # esc
+        if c in ('\x1b', '\x03', '\x04'):  # esc, ctrl+c or ctrl+d
             raw_write(b'\n')
             break  # while True
         elif c == '\x7f':  # bs
