@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open('requirements.txt') as f:
     requirements = [L for L in f.read().splitlines() if not L.startswith('#')]

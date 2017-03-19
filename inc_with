@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-import os
 import shlex
 import sys
-import pexpect
 
+import pexpect
 from getch import getch
 
 
@@ -34,7 +33,7 @@ def main(argv):
     paramstr = ''
     while True:
         try:
-            params = shlex.split(paramstr)
+            shlex.split(paramstr)
         except ValueError:  # perhaps "No closing quotation" error
             output = None
         else:
