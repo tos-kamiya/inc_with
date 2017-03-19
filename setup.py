@@ -15,7 +15,13 @@ setup(
     author_email='kamiya@mgj.nifty.com',
     scripts=['inc_with'],
     url='https://github.com/tos-kamiya/inc_with/',
-    license='CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
+    license='Public Domain',
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+        "Operating System :: POSIX",
+        "Topic :: Utilities",
+    ],
     description='Run command with giving parameters incrementally',
 )
-
