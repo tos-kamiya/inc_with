@@ -9,6 +9,8 @@ To quit the session, type `[ESC]`.
 
 Usage: inc_with COMMAND
 
+`inc_with` was largely inspired by [with tool](https://github.com/mchav/with).
+
 ## Sample Usage
 
 Make [ripgrep](https://github.com/BurntSushi/ripgrep) an incremental text search tool.
