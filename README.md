@@ -23,8 +23,8 @@ Here, `rg`'s option `-m 200` specifies an upper limit of results (lines).
 
 ## Installation
 
-Run `sudo python3 setup.py install`. A script `inc_with` will be copied in a directory
-for executables, such as `/usr/local/bin/`.
+Run `sudo pip3 install git+https://github.com/tos-kamiya/inc_with` .
+A script `inc_with` will be copied in a directory for executables, such as `/usr/local/bin/`.
 
 ## License
 
