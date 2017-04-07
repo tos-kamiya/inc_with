@@ -23,8 +23,10 @@ Here, `rg`'s option `-m 200` specifies an upper limit of results (lines).
 
 ## Installation
 
-Run `sudo pip3 install git+https://github.com/tos-kamiya/inc_with` .
+To install, run `sudo pip3 install git+https://github.com/tos-kamiya/inc_with` .
 A script `inc_with` will be copied in a directory for executables, such as `/usr/local/bin/`.
+
+To uninstall, run `sudo pip3 uninstall inc_with` .
 
 ## License
 
